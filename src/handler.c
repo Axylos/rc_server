@@ -31,11 +31,10 @@ static int parse_req(char *req, char **request_line)
 	printf("chunk: %s\n", chunk);
 	if (chunk == NULL) {
 		puts("invalid request");
-		return - 1;
+		return -1;
 	} else {
 		*request_line = strdup(chunk);
 	}
-
 
 	return 0;
 }

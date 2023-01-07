@@ -28,5 +28,6 @@ int main(int argc, char *argv[])
 		handle_conn(conn);
 		close(conn);
 	}
+	close(sockfd);
 	exit(0);
 }

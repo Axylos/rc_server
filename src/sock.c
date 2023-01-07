@@ -17,7 +17,15 @@ int setup_socket()
 		exit(-1);
 	}
 
-	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, 0, 0);
+	/**
+	 this took some googling and is really a kludge
+	 to deal with not properly tearing down the sock address
+	**/
+	int enable = 1;
+	int ret = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (void *)&enable,
+			     sizeof(int));
+	if (ret != 0)
+		perror("error setting sock opt");
 
 	struct sockaddr_in addr;
 	struct in_addr address;
