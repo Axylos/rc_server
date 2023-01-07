@@ -6,11 +6,17 @@ CFLAGS=-Werror -Wall -g
 
 .PHONY: clean run build
 
-$(TARG)/app.o: $(SRC)/app.c
-	gcc -c -o $@ $^
+$(TARG)/sock.o: $(SRC)/sock.c
+	$(CC) $(CFLAGS) -c -o $@ $^ -I $(INC)
 
-build: $(TARG)/app.o
-	gcc -o app $^
+$(TARG)/handler.o: $(SRC)/handler.c
+	$(CC) $(CFLAGS) -c -o $@ $^ -I $(INC)
+
+$(TARG)/app.o: $(SRC)/app.c 
+	$(CC) $(CFLAGS) -c -o $@ $^ -I $(INC)
+
+build: $(TARG)/app.o $(TARG)/sock.o $(TARG)/handler.o
+	$(CC) $(CFLAGS) -o app $^ -I $(INC)
 
 clean:
 	rm -rf $(TARG)/*
