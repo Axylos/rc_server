@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "include/store.h"
+
 static int REQ_SIZE = 50000;
 
 static void consume_req(int conn, char *req)
@@ -39,6 +41,7 @@ static int parse_req(char *req, char **request_line)
 	return 0;
 }
 
+
 void handle_conn(int conn)
 {
 	int msg_size = REQ_SIZE * 5;
@@ -55,6 +58,30 @@ void handle_conn(int conn)
 		close(conn);
 		exit(-1);
 	};
+
+	char *marker;
+	strtok_r(request_line, " ", &marker);
+	char *path = strtok_r(NULL, " ", &marker);
+	puts("got a path");
+	char *key = calloc(100, sizeof(char));
+	char *val = calloc(100, sizeof(char));
+	int size; 
+	if ((size = sscanf(path, "/set?%[A-Za-z0-9\\-]=%[A-Za-z0-9\\-]", key, val)) != 0) {
+		int result = put(key, val);
+		printf("result: %d\n", result);
+		printf("store: %s %s\n", key, val);
+	} else if ((size = sscanf(path, "/get?%s", key)) != 0) {
+		char *result = get(key);
+		if (result == NULL) {
+			puts("not found");
+		} else {
+			printf("found it: %s\n", result);
+		} 
+		
+		printf("fetch: %s\n", key);
+	} else {
+		puts("invalid path");
+	}
 
 	close(conn);
 }

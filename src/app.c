@@ -4,9 +4,10 @@
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
-
+#include <assert.h>
 #include "include/handler.h"
 #include "include/sock.h"
+
 
 int main(int argc, char *argv[])
 {
