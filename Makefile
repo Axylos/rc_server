@@ -2,7 +2,7 @@ CC=gcc
 SRC=./src
 INC=$(SRC)/include
 TARG=./target
-CFLAGS=-Werror -Wall -g
+CFLAGS=-Werror -Wall -g -pedantic
 
 .PHONY: clean run build
 

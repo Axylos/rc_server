@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
 			exit(EPERM);
 		}
 
-		puts("got a connection");
 		handle_conn(conn);
 		close(conn);
 	}
