@@ -6,21 +6,10 @@ CFLAGS=-Werror -Wall -g -pedantic
 
 .PHONY: clean run build
 
+$(TARG)/%.o: $(SRC)/%.c $(INC)
+	$(CC) $(CFLAGS) -c -o $@ $< -I $(INC)
 
-# these should be collapsed into more abstract rules
-# something with patsubst would cut down on the INC + object boilerplate
-$(TARG)/store.o: $(SRC)/store.c
-	$(CC) $(CFLAGS) -c -o $@ $^ -I $(INC)
-
-$(TARG)/sock.o: $(SRC)/sock.c
-	$(CC) $(CFLAGS) -c -o $@ $^ -I $(INC)
-
-$(TARG)/handler.o: $(SRC)/handler.c 
-	$(CC) $(CFLAGS) -c -o $@ $^ -I $(INC)
-
-$(TARG)/app.o: $(SRC)/app.c 
-	$(CC) $(CFLAGS) -c -o $@ $^ -I $(INC)
-
+# it would be good to extract the obj file names but unsure how to do that reasonably
 build: $(TARG)/app.o $(TARG)/sock.o $(TARG)/handler.o $(TARG)/store.o
 	$(CC) $(CFLAGS) -o app $^ -I $(INC)
 
