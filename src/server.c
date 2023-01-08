@@ -3,9 +3,8 @@ I implemented the Database Server task in C using POSIX TCP sockets and standard
 
 I'm still pretty new to C, so I chose to perform a task I understand pretty well (building a simple web server) in a context I'm less familiar with to learn more about the next level "down stack" from where I typically work.  I tested this out on linux using cURL and chrome to verify that the requirements have been met.
 
-The "get" and "set" data operations are isolated to a separate file, so migrating them to the filesystem in the interview should be manageable.
-
 While I'm pretty sure the code is free of plain data corruption issues, there are a few quirks I noted in comments, mostly related to setup/teardown of the socket object.
+Also, malicious or invalid input is not gracefully handled.
 
 I really enjoyed working on this task and look forward to returning to it in the pairing session.
 **/
@@ -21,8 +20,6 @@ I really enjoyed working on this task and look forward to returning to it in the
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
-#include "include/handler.h"
-#include "include/sock.h"
 
 static int BACKLOG = 10;
 const char *OK_STATUS = "HTTP/1.1 200 OK";
@@ -66,7 +63,7 @@ int put(char *key, char *val)
 		node->key = strdup(key);
 		node->val = strdup(val);
 		node->next = NULL;
-		prev->next = next;
+		prev->next = node;
 		return 1;
 	}
 
@@ -219,7 +216,8 @@ void handle_conn(int conn)
 	// definitely nota safe or flexible way to handle url encoded values
 	if (sscanf(path, "/set?%[A-Za-z0-9\\-]=%[A-Za-z0-9\\-]", key, val) !=
 	    0) {
-		put(key, val);
+		int ret = put(key, val);
+		printf("ret: %d\n", ret);
 		resp = build_set_resp();
 	} else if (sscanf(path, "/get?%s", key) != 0) {
 		char *result = get(key);
