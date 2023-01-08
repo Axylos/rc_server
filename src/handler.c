@@ -67,6 +67,8 @@ static char *build_not_found(char *key)
 	snprintf(resp, size, "%s\r\n%s\r\n%s\r\n\r\n%s", NOT_FOUND_STATUS,
 		 CONNECTION_H, len_h, body);
 
+	free(body);
+	free(len_h);
 	return resp;
 }
 
