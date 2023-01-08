@@ -16,5 +16,9 @@ build: $(TARG)/app.o $(TARG)/sock.o $(TARG)/handler.o $(TARG)/store.o
 clean:
 	rm -rf $(TARG)/*
 
+release: $(SRC)/server.c
+	$(CC) $(CFLAGS) -o server $^
+	./server
+
 run: build 
 	./app
